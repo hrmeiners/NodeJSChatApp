@@ -10,7 +10,7 @@ http.listen(3000, () => {
 });
 
 app.get('/', (req, res) => {
-    res.send('Welcome!');
+    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
