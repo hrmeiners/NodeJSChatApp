@@ -25,8 +25,42 @@
             
             </div>
         </div>
+
+        //connect the server via Socket.io
+        <script src="/socket.io/socket.io.js"></script>
+
+        //chat client code
         <script>
-            <!-- client side javascript code here-->
+            const socket = io('http://localhost:3000');
+            socket.emit('joinRoom', roomId);
+            
+            //send messages
+            const messageForm = document.querySelector('#message-form');
+            messageForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const messageInput = document.querySelector('#message-input');
+
+                const message = {
+                    text: messageInput.value
+                };
+
+                socket.emit('sendMessage', message);
+                messageInput.value = '';
+            });
+
+            //recieve messages
+            socket.on('newMessage', (message) => {
+                const messagesList = document.querySelector('#messages-list');
+                const messageItem = document.createElement('li');
+                messageItem.textContent = '${message.userId}: ${message.text}';
+                messagesList.appendChild(messageItem);
+            });
+
+            //handle errors and edge case --> disconnect and update UI
+            socket.on('disconnect', () => {
+                //update UI to indicate user has disconnected
+            });
+
         </script>
     </body>
 </html>
